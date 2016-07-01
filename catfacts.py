@@ -57,11 +57,15 @@ class CatFacts(object):
   def write_subscribers(self):
     subs = open('subscribers.txt', 'w')
     for user, facts in self.subscribers.items():
+      print('  Writing {}.'.format(user))
       subs.write(user)
       for fact, count in facts.items():
-        subs.write(',' + fact + ':')
+        subs.write(',' + str(fact) + ':' + str(count))
       subs.write('\n')
     subs.close
+
+  def get_subscribers(self):
+    return self.subscribers.keys()
 
   def list_subscribers(self):
     return '```' + '\n'.join(self.subscribers.keys()) + '```'

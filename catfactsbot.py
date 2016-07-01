@@ -27,7 +27,7 @@ def get_icon_emoji():
 posted = False
 
 cf = CatFacts()
-channels = {} #Mapping from channel_id to user_id
+#channels = {} #Mapping from channel_id to user_id
 
 usage = """
 Welcome to Cat Facts!
@@ -63,30 +63,32 @@ if sc.rtm_connect() == True:
       if part['type'] == 'message':
         if '<@U1MKHKV8U>' in part['text']:
           if 'unsubscribe' in part['text'].lower():
-            cf.remove_subscriber(part['user'])
-            channels.pop(part['channel'])
+            cf.remove_subscriber(part['channel'].strip())
+            save_subs()
             sc.api_call("chat.postMessage", channel=part['channel'], text="We're sorry to see you go.", username=NAME, icon_emoji=':crying_cat_face:')
           elif 'subscribe' in part['text'].lower():
-            cf.add_subscriber(part['user'])
-            channels[part['channel']] = part['user']
-            sc.api_call("chat.postMessage", channel=part['channel'], text="Thanks for subscribing to cat facts!", username=NAME, icon_emoji=':smile_cat:')
+            cf.add_subscriber(part['channel'].strip())
+            save_subs()
+            sc.api_call("chat.postMessage", channel=part['channel'], text="Thanks for subscribing to cat facts! Here's your complimentary first cat fact!", username=NAME, icon_emoji=':smile_cat:')
+            sc.api_call("chat.postMessage", channel=part['channel'], text=cf.get_fact(part['channel'].strip()), username=NAME, icon_emoji=':smile_cat:')
           elif 'fact' in part['text'].lower():
-            sc.api_call("chat.postMessage", channel=part['channel'], text=cf.get_fact(part['user']), username=NAME, icon_emoji=get_icon_emoji())
+            sc.api_call("chat.postMessage", channel=part['channel'], text=cf.get_fact(part['channel'].strip()), username=NAME, icon_emoji=get_icon_emoji())
+            save_subs()
           elif 'list' in part['text'].lower() and part['user'] == 'U0PDQ1P2R':
             sc.api_call("chat.postMessage", channel=part['channel'], text=cf.list_subscribers(), username=NAME, icon_emoji=get_icon_emoji())
           else:
             sc.api_call("chat.postMessage", channel=part['channel'], text=usage, username=NAME, icon_emoji=get_icon_emoji())
 
-    if datetime.now(timezone('Australia/Sydney')).time().second == 0:
-      save_subs()
     if 0 <= datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
       print('It\'s a new day.')
       posted = False
     if 15 <= datetime.now(timezone('Australia/Sydney')).time().hour < 17 and posted == False: #3pm to 5pm
       print('It\'s cat fact time!')
       posted = True
-      for channel, user in channels.items():
-        sc.api_call("chat.postMessage", channel=channel, text=cf.get_fact(user), username=NAME, icon_emoji=get_icon_emoji())
+      for channel in cf.get_subscribers():
+        print('Sending a fact to {}.'.format(channel))
+        sc.api_call("chat.postMessage", channel=channel, text=cf.get_fact(channel), username=NAME, icon_emoji=get_icon_emoji())
+      save_subs()
 
     sleep(1)
 else:
