@@ -32,6 +32,9 @@ class CatFacts(object):
     self.subscribers.pop(user_id)
 
   def get_fact(self, subscriber = None):
+    if subscriber != None and subscriber not in self.subscribers:
+      subscriber = None
+
     fact = choice(range(self.fact_count))
 
     i = 0
