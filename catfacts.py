@@ -1,5 +1,6 @@
 from random import choice
 
+
 class CatFacts(object):
 
   facts = []
@@ -55,12 +56,12 @@ class CatFacts(object):
 
   def write_subscribers(self):
     subs = open('subscribers.txt', 'w')
-    for user, facts in self.subscribers.iteritems():
+    for user, facts in self.subscribers.items():
       subs.write(user)
-      for fact, count in facts.iteritems():
+      for fact, count in facts.items():
         subs.write(',' + fact + ':')
       subs.write('\n')
     subs.close
 
   def list_subscribers(self):
-    return '`' + '\n'.join(self.subscribers.keys()) + '`'
+    return '```' + '\n'.join(self.subscribers.keys()) + '```'

@@ -5,7 +5,7 @@ from datetime import datetime
 from catfacts import *
 from random import choice
 from pytz import timezone
-import signal
+import atexit
 
 NAME = 'cat_facts'
 
@@ -40,8 +40,10 @@ Anything else and I'll show you this message to help you out!
 If you have any facts you want to add, comments, complaints, or bug reports, message Jack Reichelt.
 """
 
-# def sigterm_handler(_signo, _stack_frame):
-#     cf.write_subscribers()
+@atexit.register
+def save_subs():
+  print('Writing subscribers.')
+  cf.write_subscribers()
 #     sys.exit(0)
 #
 # signal.signal(signal.SIGTERM, sigterm_handler)
@@ -76,14 +78,14 @@ if sc.rtm_connect() == True:
             sc.api_call("chat.postMessage", channel=part['channel'], text=usage, username=NAME, icon_emoji=get_icon_emoji())
 
     if datetime.now(timezone('Australia/Sydney')).time().second == 0:
-      cf.write_subscribers()
+      save_subs()
     if 0 < datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
       print('It\'s a new day.')
       posted = False
     if 16 < datetime.now(timezone('Australia/Sydney')).time().hour < 17 and posted == False: #3pm to 4pm
       print('It\'s cat fact time!')
       posted = True
-      for channel, user in channels.iteritems():
+      for channel, user in channels.items():
         sc.api_call("chat.postMessage", channel=channel, text=cf.get_fact(user), username=NAME, icon_emoji=get_icon_emoji())
 
     sleep(1)
