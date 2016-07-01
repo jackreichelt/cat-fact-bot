@@ -61,3 +61,6 @@ class CatFacts(object):
         subs.write(',' + fact + ':')
       subs.write('\n')
     subs.close
+
+  def list_subscribers(self):
+    return '`' + '\n'.join(subscribers.keys) + '`'
