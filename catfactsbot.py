@@ -55,9 +55,11 @@ if sc.rtm_connect() == True:
           if 'unsubscribe' in part['text'].lower():
             cf.remove_subscriber(part['user'])
             channels.pop(part['channel'])
+            sc.api_call("chat.postMessage", channel=part['channel'], text="We're sorry to see you go.", username=NAME, icon_emoji=get_icon_emoji())
           elif 'subscribe' in part['text'].lower():
             cf.add_subscriber(part['user'])
             channels[part['channel']] = part['user']
+            sc.api_call("chat.postMessage", channel=part['channel'], text="Thanks for subscribing to cat facts!", username=NAME, icon_emoji=get_icon_emoji())
           elif 'fact' in part['text'].lower():
             sc.api_call("chat.postMessage", channel=part['channel'], text=cf.get_fact(part['user']), username=NAME, icon_emoji=get_icon_emoji())
           else:
