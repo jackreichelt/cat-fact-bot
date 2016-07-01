@@ -5,6 +5,7 @@ from datetime import datetime
 from catfacts import *
 from random import choice
 from pytz import timezone
+import signal
 
 NAME = 'cat_facts'
 
@@ -38,6 +39,12 @@ Anything else and I'll show you this message to help you out!
 
 If you have any facts you want to add, comments, complaints, or bug reports, message Jack Reichelt.
 """
+
+def sigterm_handler(_signo, _stack_frame):
+    cf.write_subscribers()
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 token = os.environ.get('TOKEN', None) # found at https://api.slack.com/web#authentication
 sc = SlackClient(token)
