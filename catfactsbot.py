@@ -4,6 +4,7 @@ import os
 from datetime import datetime
 from catfacts import *
 from random import choice
+from pytz import timezone
 
 NAME = 'cat_facts'
 
@@ -65,9 +66,11 @@ if sc.rtm_connect() == True:
           else:
             sc.api_call("chat.postMessage", channel=part['channel'], text=usage, username=NAME, icon_emoji=get_icon_emoji())
 
-    if 14 < datetime.utcnow().time().hour < 15: #midnight to 1am
+    if 0 < datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
+      print('It\'s a new day.')
       posted = False
-    if 5 < datetime.utcnow().time().hour < 6 and posted == False: #3pm to 4pm
+    if 15 < datetime.now(timezone('Australia/Sydney')).time().hour < 16 and posted == False: #3pm to 4pm
+      print('It\'s cat fact time!')
       posted = True
       for channel, user in channels.iteritems():
         sc.api_call("chat.postMessage", channel=channel, text=cf.get_fact(user), username=NAME, icon_emoji=get_icon_emoji())
