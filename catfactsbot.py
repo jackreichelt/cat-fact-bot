@@ -64,7 +64,7 @@ if sc.rtm_connect() == True:
           elif 'fact' in part['text'].lower():
             sc.api_call("chat.postMessage", channel=part['channel'], text=cf.get_fact(part['user']), username=NAME, icon_emoji=get_icon_emoji())
           elif 'list' in part['text'].lower() and part['user'] == 'U0PDQ1P2R':
-            sc.api_call("chat.postMessage", channel=part['channel'], text=cf.list_subscribers, username=NAME, icon_emoji=get_icon_emoji())
+            sc.api_call("chat.postMessage", channel=part['channel'], text=cf.list_subscribers(), username=NAME, icon_emoji=get_icon_emoji())
           else:
             sc.api_call("chat.postMessage", channel=part['channel'], text=usage, username=NAME, icon_emoji=get_icon_emoji())
 
