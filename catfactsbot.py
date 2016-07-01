@@ -79,10 +79,10 @@ if sc.rtm_connect() == True:
 
     if datetime.now(timezone('Australia/Sydney')).time().second == 0:
       save_subs()
-    if 0 < datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
+    if 0 <= datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
       print('It\'s a new day.')
       posted = False
-    if 16 < datetime.now(timezone('Australia/Sydney')).time().hour < 17 and posted == False: #3pm to 4pm
+    if 16 <= datetime.now(timezone('Australia/Sydney')).time().hour < 17 and posted == False: #3pm to 4pm
       print('It\'s cat fact time!')
       posted = True
       for channel, user in channels.items():
