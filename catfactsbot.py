@@ -66,7 +66,7 @@ if sc.rtm_connect() == True:
 
     if 14 < datetime.utcnow().time().hour() < 15: #midnight to 1am
       posted = False
-    if 05 < datetime.utcnow().time().hour() < 06 and posted == False: #3pm to 4pm
+    if 5 < datetime.utcnow().time().hour() < 6 and posted == False: #3pm to 4pm
       posted = True
       for channel, user in channels.iteritems():
         sc.api_call("chat.postMessage", channel=channel, text=cf.get_fact(user), username=NAME, icon_emoji=get_icon_emoji())
