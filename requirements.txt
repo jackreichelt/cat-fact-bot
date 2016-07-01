@@ -1,2 +1,3 @@
 slackclient
 pytz
+tinys3

@@ -6,6 +6,7 @@ from catfacts import *
 from random import choice
 from pytz import timezone
 import atexit
+from tinys3 import Connection
 
 NAME = 'cat_facts'
 
@@ -44,12 +45,20 @@ If you have any facts you want to add, comments, complaints, or bug reports, mes
 def save_subs():
   print('Writing subscribers.')
   cf.write_subscribers()
+  conn.upload('subscribers.txt', open('subscribers.txt', 'rb'), 'better-cat-facts')
 #     sys.exit(0)
 #
 # signal.signal(signal.SIGTERM, sigterm_handler)
 
-token = os.environ.get('TOKEN', None) # found at https://api.slack.com/web#authentication
-sc = SlackClient(token)
+TOKEN = os.environ.get('TOKEN', None) # found at https://api.slack.com/web#authentication
+S3_ACCESS_KEY = os.environ.get('S3_ACCESS_KEY', None)
+S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY', None)
+
+conn = Connection(S3_ACCESS_KEY, S3_SECRET_KEY, endpoint='s3-ap-southeast-2.amazonaws.com')
+
+open('subscribers.txt', 'wb').write(conn.get('subscribers.txt', 'better-cat-facts').content)
+
+sc = SlackClient(TOKEN)
 if sc.rtm_connect() == True:
   print('Connected.')
 
