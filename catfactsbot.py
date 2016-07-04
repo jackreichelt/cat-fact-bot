@@ -56,7 +56,12 @@ S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY', None)
 
 conn = Connection(S3_ACCESS_KEY, S3_SECRET_KEY, endpoint='s3-ap-southeast-2.amazonaws.com')
 
-open('subscribers.txt', 'wb').write(conn.get('subscribers.txt', 'better-cat-facts').content)
+saved_subs = conn.get('subscribers.txt', 'better-cat-facts')
+print(saved_subs)
+
+f = open('subscribers.txt', 'wb')
+f.write(saved_subs.content)
+f.close()
 
 sc = SlackClient(TOKEN)
 if sc.rtm_connect() == True:
@@ -88,7 +93,7 @@ if sc.rtm_connect() == True:
           else:
             sc.api_call("chat.postMessage", channel=part['channel'], text=usage, username=NAME, icon_emoji=get_icon_emoji())
 
-    if 0 <= datetime.now(timezone('Australia/Sydney')).time().hour < 1: #midnight to 1am
+    if 0 <= datetime.now(timezone('Australia/Sydney')).time().hour < 1 and posted == True: #midnight to 1am
       print('It\'s a new day.')
       posted = False
     if 15 <= datetime.now(timezone('Australia/Sydney')).time().hour < 17 and posted == False: #3pm to 5pm
