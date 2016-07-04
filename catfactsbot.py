@@ -58,6 +58,7 @@ conn = Connection(S3_ACCESS_KEY, S3_SECRET_KEY, endpoint='s3-ap-southeast-2.amaz
 
 saved_subs = conn.get('subscribers.txt', 'better-cat-facts')
 print(saved_subs)
+print(saved_subs.content)
 
 f = open('subscribers.txt', 'wb')
 f.write(saved_subs.content)
