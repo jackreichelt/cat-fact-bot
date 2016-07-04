@@ -27,7 +27,6 @@ def get_icon_emoji():
 
 posted = False
 
-cf = CatFacts()
 #channels = {} #Mapping from channel_id to user_id
 
 usage = """
@@ -57,12 +56,12 @@ S3_SECRET_KEY = os.environ.get('S3_SECRET_KEY', None)
 conn = Connection(S3_ACCESS_KEY, S3_SECRET_KEY, endpoint='s3-ap-southeast-2.amazonaws.com')
 
 saved_subs = conn.get('subscribers.txt', 'better-cat-facts')
-print(saved_subs)
-print(saved_subs.content)
 
 f = open('subscribers.txt', 'wb')
 f.write(saved_subs.content)
 f.close()
+
+cf = CatFacts()
 
 sc = SlackClient(TOKEN)
 if sc.rtm_connect() == True:
